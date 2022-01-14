@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
 
   Future<void> loadPage() async{
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 0));
 
     Navigator.pushReplacement(
       context,

@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bmby.dreams.tiles.demo.dreams_v3_1">
+    package="com.dreams.einstein.bmby.com">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:icon="@mipmap/ic_launcher"
-        android:label="dreams_v3_1"
+        android:icon="@mipmap/launcher_icon"
+        android:label="Einstein Towers"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
@@ -58,5 +58,11 @@
             <data android:mimeType="*/*" />
         </intent>
     </queries>
+
+    <meta-data
+        android:name="io.flutter.embedding.android.SplashScreenDrawable"
+        android:resource="@drawable/launch_background"
+        />
+
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.bmby.dreams.tiles.demo.dreams_v3_1
+package com.dreams.einstein.bmby.com
 
 import io.flutter.embedding.android.FlutterActivity
 

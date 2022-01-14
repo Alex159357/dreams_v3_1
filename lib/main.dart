@@ -1,27 +1,85 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:device_info/device_info.dart';
 import 'home_page.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+Future<String> getDevice() async {
+  if (Platform.isAndroid) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.androidId;
+  } else if (Platform.isIOS) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    return iosInfo.identifierForVendor;
+  } else
+    return "DEVICE ID ERROR";
+}
+
+String deviceUd = "DEVICE ID ERROR";
+
+void main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  deviceUd = await getDevice();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  MyApp({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Scaffold(
-        body: SafeArea(child: StarterPage()),
-      ),
+    return _getBody;
+  }
+
+  Widget get _getBody => FutureBuilder(
+        future: Init.instance.initialize(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: Splash());
+          } else {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Einstein',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),//https://dreamsv3dev1.z21.web.core.windows.net/
+              home: const HomePage("https://3d-tiles.res-ua.com/"),
+            );
+          }
+        },
+      );
+}
+
+class Splash extends StatelessWidget {
+  const Splash({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    bool lightMode =
+        MediaQuery.of(context).platformBrightness == Brightness.light;
+    return Scaffold(
+      backgroundColor:
+          lightMode ? const Color(0xffffffff) : const Color(0xff000000),
+      body: Center(
+          child: lightMode
+              ? Image.asset('assets/img.png')
+              : Image.asset('assets/img.png')),
     );
+  }
+}
+
+class Init {
+  Init._();
+
+  static final instance = Init._();
+
+  Future initialize() async {
+    await Future.delayed(const Duration(seconds: 3));
   }
 }
 
